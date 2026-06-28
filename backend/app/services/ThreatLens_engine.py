@@ -1,6 +1,7 @@
 def analyze_threat(
     virustotal_score,
     abuseipdb_score,
+    alienvault_score,
     malicious,
     suspicious,
     reputation,
@@ -9,23 +10,51 @@ def analyze_threat(
     """
     ThreatLens Intelligence Engine
 
-    Combines intelligence from multiple sources and returns
-    ThreatLens's final assessment.
+    Combines VirusTotal, AbuseIPDB and AlienVault
+    into one intelligent ThreatLens assessment.
     """
 
     # ----------------------------
-    # Calculate ThreatLens Score
+    # Handle Missing Scores
+    # ----------------------------
+
+    if abuseipdb_score is None:
+        abuseipdb_score = 0
+
+    if alienvault_score is None:
+        alienvault_score = 0
+
+    # ----------------------------
+    # ThreatLens Score V2
     # ----------------------------
 
     if ioc_type == "ip":
 
         threatlens_score = round(
-            (virustotal_score + abuseipdb_score) / 2
+
+            (virustotal_score * 0.5)
+
+            +
+
+            (abuseipdb_score * 0.3)
+
+            +
+
+            (alienvault_score * 0.2)
+
         )
 
     else:
 
-        threatlens_score = virustotal_score
+        threatlens_score = round(
+
+            (virustotal_score * 0.7)
+
+            +
+
+            (alienvault_score * 0.3)
+
+        )
 
     # ----------------------------
     # Decide Status
@@ -48,7 +77,7 @@ def analyze_threat(
         status = "Malicious"
 
     # ----------------------------
-    # Confidence
+    # Confidence Score
     # ----------------------------
 
     confidence = 90
@@ -59,16 +88,19 @@ def analyze_threat(
     if suspicious > 5:
         confidence += 3
 
+    if reputation > 20:
+        confidence += 2
+
     confidence = min(confidence, 100)
 
     # ----------------------------
-    # Summary
+    # Summary & Recommendation
     # ----------------------------
 
     if status == "Safe":
 
         summary = (
-            "ThreatLens found no significant indicators of malicious activity."
+            "ThreatLens found no significant indicators of malicious activity across the analyzed intelligence sources."
         )
 
         recommendation = (
@@ -78,32 +110,36 @@ def analyze_threat(
     elif status == "Low Risk":
 
         summary = (
-            "Some low-risk indicators were detected. Additional verification is recommended."
+            "ThreatLens detected a small number of low-risk indicators. The IOC should be monitored for any future changes."
         )
 
         recommendation = (
-            "Monitor the IOC before allowing unrestricted access."
+            "Monitor the IOC and allow access only if it is required."
         )
 
     elif status == "Suspicious":
 
         summary = (
-            "Multiple indicators suggest suspicious behavior."
+            "ThreatLens identified multiple suspicious indicators from one or more threat intelligence sources."
         )
 
         recommendation = (
-            "Investigate this IOC before trusting it."
+            "Investigate this IOC before trusting or allowing communication."
         )
 
     else:
 
         summary = (
-            "ThreatLens considers this IOC to be highly dangerous."
+            "ThreatLens considers this IOC highly malicious based on combined threat intelligence from multiple security sources."
         )
 
         recommendation = (
-            "Block this IOC immediately and investigate affected systems."
+            "Immediately block this IOC, investigate affected systems, and initiate incident response procedures."
         )
+
+    # ----------------------------
+    # Final Result
+    # ----------------------------
 
     return {
 
@@ -116,4 +152,5 @@ def analyze_threat(
         "summary": summary,
 
         "recommendation": recommendation
+
     }
