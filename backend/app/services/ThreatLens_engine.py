@@ -57,24 +57,40 @@ def analyze_threat(
         )
 
     # ----------------------------
-    # Decide Status
+    # Intelligent Threat Decision
     # ----------------------------
 
-    if threatlens_score <= 20:
+    # High confidence malicious overrides
 
-        status = "Safe"
+    if virustotal_score >= 90 and malicious >= 10:
+
+      status = "Malicious"
+
+    elif abuseipdb_score >= 90:
+
+      status = "Malicious"
+
+    elif alienvault_score >= 80:
+
+      status = "Malicious"
+
+    # Normal ThreatLens score
+
+    elif threatlens_score <= 20:
+
+      status = "Safe"
 
     elif threatlens_score <= 50:
 
-        status = "Low Risk"
+      status = "Low Risk"
 
     elif threatlens_score <= 80:
 
-        status = "Suspicious"
+      status = "Suspicious"
 
     else:
 
-        status = "Malicious"
+      status = "Malicious"
 
     # ----------------------------
     # Confidence Score

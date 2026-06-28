@@ -4,6 +4,7 @@ from app.services.abuseipdb_service import get_abuseipdb_data
 from app.services.alienvault_service import get_alienvault_data
 from app.services.threatlens_engine import analyze_threat
 from app.services.ai_analysis_service import generate_ai_analysis
+from app.services.owasp_mapper import map_to_owasp
 
 
 def investigate(ioc: str):
@@ -97,12 +98,32 @@ def investigate(ioc: str):
 
        response.update(abuse_data)
 
-# -----------------------------
-# ThreatLens AI Analysis
-# -----------------------------
+    # -----------------------------
+    # AI Analysis
+    # -----------------------------
 
     ai_analysis = generate_ai_analysis(response)
 
     response.update(ai_analysis)
+
+    # -----------------------------
+    # OWASP Mapping
+    # -----------------------------
+
+    owasp = map_to_owasp(
+
+    ioc_type=ioc_type,
+
+    status=response["status"],
+
+    threat_score=response["threatlens_score"]
+
+    )
+
+    response.update(owasp)
+
+    # -----------------------------
+    # Return Final Response
+    # -----------------------------
 
     return response
