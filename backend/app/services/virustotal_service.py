@@ -137,7 +137,11 @@ def investigate_ioc(ioc: str, ioc_type: str):
 
             "owner": owner,
 
-            "last_analysis_date": last_analysis
+            "last_analysis_date": last_analysis,
+            
+            "raw_attributes": attributes
+            
+            
 
         }
 

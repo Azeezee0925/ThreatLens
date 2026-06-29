@@ -15,24 +15,41 @@ def generate_ai_analysis(data):
 
     vt_score = data["virustotal_score"]
 
-    abuse_score = data.get("abuse_confidence_score", 0) or 0
-
-    alien_score = data.get("alienvault_score", 0) or 0
-
-    pulse_count = data.get("pulse_count", 0) or 0
+    abuse_score = data.get("abuse_confidence_score")
+    alien_score = data.get("alienvault_score")
+    pulse_count = data.get("pulse_count", 0)
 
     status = data["status"]
+
+    # ---------------------------------
+    # Intelligence Sources Used
+    # ---------------------------------
+
+    sources = ["VirusTotal"]
+
+    if abuse_score is not None:
+        sources.append("AbuseIPDB")
+
+    if alien_score is not None:
+        sources.append("AlienVault OTX")
+
+    if len(sources) == 1:
+        source_text = sources[0]
+
+    elif len(sources) == 2:
+        source_text = f"{sources[0]} and {sources[1]}"
+
+    else:
+        source_text = ", ".join(sources[:-1]) + f" and {sources[-1]}"
 
     # ---------------------------------
     # Executive Summary
     # ---------------------------------
 
     summary = (
-        f"The investigated {ioc_type} ({ioc}) "
-        f"was analyzed using VirusTotal, AbuseIPDB "
-        f"and AlienVault OTX. "
-        f"ThreatLens calculated an overall threat "
-        f"score of {score}/100."
+        f"The investigated {ioc_type.upper()} ({ioc}) was analyzed using "
+        f"{source_text}. ThreatLens correlated the available threat intelligence "
+        f"and calculated an overall threat score of {score}/100."
     )
 
     # ---------------------------------
@@ -42,33 +59,33 @@ def generate_ai_analysis(data):
     if status == "Safe":
 
         risk = (
-            "Current threat intelligence indicates a low "
-            "probability of malicious activity."
+            "Current threat intelligence indicates a low probability "
+            "of malicious activity."
         )
 
     elif status == "Low Risk":
 
         risk = (
-            "Some suspicious indicators were identified. "
-            "Continued monitoring is recommended."
+            "Some suspicious indicators were identified. Continued "
+            "monitoring is recommended."
         )
 
     elif status == "Suspicious":
 
         risk = (
-            "Multiple threat indicators suggest potentially "
-            "malicious behavior requiring investigation."
+            "Multiple threat indicators suggest potentially malicious "
+            "behavior requiring further investigation."
         )
 
     else:
 
         risk = (
-            "Strong evidence from multiple intelligence "
-            "sources indicates malicious activity."
+            "Strong evidence from multiple threat intelligence sources "
+            "indicates malicious activity."
         )
 
     # ---------------------------------
-    # Intelligence Findings
+    # Key Findings
     # ---------------------------------
 
     findings = []
@@ -104,36 +121,32 @@ def generate_ai_analysis(data):
         )
 
     # ---------------------------------
-    # Remediation
+    # AI Recommendation
     # ---------------------------------
 
     if status == "Safe":
 
         recommendation = (
-            "No immediate action is required. "
-            "Continue routine monitoring."
+            "No immediate action is required. Continue routine monitoring."
         )
 
     elif status == "Low Risk":
 
         recommendation = (
-            "Monitor this IOC and verify before allowing "
-            "production use."
+            "Monitor this IOC closely and verify its legitimacy before allowing production use."
         )
 
     elif status == "Suspicious":
 
         recommendation = (
-            "Investigate affected systems, collect logs, "
-            "and verify related activity."
+            "Investigate affected systems, review related logs, and monitor for further suspicious activity."
         )
 
     else:
 
         recommendation = (
-            "Immediately block this IOC, isolate affected "
-            "systems, initiate incident response and "
-            "perform forensic analysis."
+            "Immediately block this IOC, isolate affected systems, initiate incident response procedures, "
+            "and perform a forensic investigation."
         )
 
     return {
