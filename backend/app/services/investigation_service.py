@@ -2,7 +2,7 @@ from app.services.ioc_detector import detect_ioc_type
 from app.services.virustotal_service import investigate_ioc
 from app.services.abuseipdb_service import get_abuseipdb_data
 from app.services.alienvault_service import get_alienvault_data
-from app.services.threatlens_engine import analyze_threat
+from app.services.ThreatLens_engine import analyze_threat
 from app.services.ai_analysis_service import generate_ai_analysis
 from app.services.owasp_mapper import map_to_owasp
 from app.services.knowledge_engine import extract_search_keyword

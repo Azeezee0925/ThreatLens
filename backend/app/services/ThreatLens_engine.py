@@ -7,16 +7,6 @@ def analyze_threat(
     reputation,
     ioc_type
 ):
-    """
-    ThreatLens Intelligence Engine
-
-    Combines VirusTotal, AbuseIPDB and AlienVault
-    into one intelligent ThreatLens assessment.
-    """
-
-    # ----------------------------
-    # Handle Missing Scores
-    # ----------------------------
 
     if abuseipdb_score is None:
         abuseipdb_score = 0
@@ -25,92 +15,81 @@ def analyze_threat(
         alienvault_score = 0
 
     # ----------------------------
-    # ThreatLens Score V2
+    # Weighted ThreatLens Score
     # ----------------------------
 
     if ioc_type == "ip":
 
         threatlens_score = round(
-
-            (virustotal_score * 0.5)
-
-            +
-
-            (abuseipdb_score * 0.3)
-
-            +
-
-            (alienvault_score * 0.2)
-
+            (virustotal_score * 0.50) +
+            (abuseipdb_score * 0.30) +
+            (alienvault_score * 0.20)
         )
 
     else:
 
         threatlens_score = round(
-
-            (virustotal_score * 0.7)
-
-            +
-
-            (alienvault_score * 0.3)
-
+            (virustotal_score * 0.80) +
+            (alienvault_score * 0.20)
         )
 
     # ----------------------------
     # Intelligent Threat Decision
     # ----------------------------
 
-    # High confidence malicious overrides
+    # VirusTotal always has highest priority
+    if malicious >= 5 or virustotal_score >= 80:
 
-    if virustotal_score >= 90 and malicious >= 10:
+        status = "Malicious"
 
-      status = "Malicious"
+    elif malicious >= 1 or suspicious >= 5:
 
-    elif abuseipdb_score >= 90:
+        status = "Suspicious"
 
-      status = "Malicious"
+    elif abuseipdb_score >= 75:
 
-    elif alienvault_score >= 80:
+        status = "Suspicious"
 
-      status = "Malicious"
+    # AlienVault alone should NEVER make a trusted domain malicious
+    elif alienvault_score >= 80 and virustotal_score > 20:
 
-    # Normal ThreatLens score
+        status = "Low Risk"
 
     elif threatlens_score <= 20:
 
-      status = "Safe"
+        status = "Safe"
 
-    elif threatlens_score <= 50:
+    elif threatlens_score <= 40:
 
-      status = "Low Risk"
+        status = "Low Risk"
 
-    elif threatlens_score <= 80:
+    elif threatlens_score <= 70:
 
-      status = "Suspicious"
+        status = "Suspicious"
 
     else:
 
-      status = "Malicious"
+        status = "Malicious"
 
     # ----------------------------
-    # Confidence Score
+    # Confidence
     # ----------------------------
 
-    confidence = 90
+    confidence = 85
 
-    if malicious > 5:
-        confidence += 5
+    if malicious > 0:
+        confidence += 8
 
-    if suspicious > 5:
+    if suspicious > 0:
+        confidence += 4
+
+    if virustotal_score > 0:
         confidence += 3
-
-    if reputation > 20:
-        confidence += 2
 
     confidence = min(confidence, 100)
 
     # ----------------------------
-    # Summary & Recommendation
+    # Summary
     # ----------------------------
 
     if status == "Safe":
@@ -126,36 +105,32 @@ def analyze_threat(
     elif status == "Low Risk":
 
         summary = (
-            "ThreatLens detected a small number of low-risk indicators. The IOC should be monitored for any future changes."
+            "ThreatLens detected minor indicators requiring observation, but no strong evidence of malicious activity."
         )
 
         recommendation = (
-            "Monitor the IOC and allow access only if it is required."
+            "Continue monitoring and investigate only if additional indicators appear."
         )
 
     elif status == "Suspicious":
 
         summary = (
-            "ThreatLens identified multiple suspicious indicators from one or more threat intelligence sources."
+            "ThreatLens detected multiple suspicious indicators that should be investigated before trusting this IOC."
         )
 
         recommendation = (
-            "Investigate this IOC before trusting or allowing communication."
+            "Investigate this IOC before allowing communication."
         )
 
     else:
 
         summary = (
-            "ThreatLens considers this IOC highly malicious based on combined threat intelligence from multiple security sources."
+            "ThreatLens found strong evidence indicating malicious activity across multiple intelligence sources."
         )
 
         recommendation = (
-            "Immediately block this IOC, investigate affected systems, and initiate incident response procedures."
+            "Immediately block this IOC and begin incident response procedures."
         )
-
-    # ----------------------------
-    # Final Result
-    # ----------------------------
 
     return {
 
