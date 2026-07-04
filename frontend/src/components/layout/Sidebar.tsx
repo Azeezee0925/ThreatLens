@@ -30,11 +30,6 @@ const menu = [
     icon: Bell,
     href: "/alerts",
   },
-  {
-    title: "Settings",
-    icon: Settings,
-    href: "/settings",
-  },
 ];
 
 export default function Sidebar() {
