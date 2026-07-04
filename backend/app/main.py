@@ -10,6 +10,7 @@ from app.database.database import Base, engine
 from app.database.models import Investigation
 from app.database.alert_models import Alert
 from app.api import alerts
+from app.api.report import router as report_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -32,6 +33,7 @@ app.include_router(investigation_router)
 app.include_router(history_router)
 app.include_router(dashboard_router)
 app.include_router(alerts.router)
+app.include_router(report_router)
 
 
 @app.get("/")

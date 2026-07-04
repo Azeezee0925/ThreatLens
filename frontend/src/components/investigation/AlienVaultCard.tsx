@@ -16,7 +16,7 @@ export default function AlienVaultCard({ result }: Props) {
 
         <div className="bg-slate-800 rounded-xl p-5">
           <p className="text-slate-400">
-            Threat Score
+            OTX Pulse Score
           </p>
 
           <h1 className="text-4xl font-bold mt-3">

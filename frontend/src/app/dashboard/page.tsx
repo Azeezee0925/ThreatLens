@@ -1,4 +1,5 @@
 import DashboardCards from "@/components/dashboard/DashboardCards";
+import DashboardCharts from "@/components/dashboard/DashboardCharts";
 
 export default function DashboardPage() {
   return (
@@ -15,6 +16,7 @@ export default function DashboardPage() {
       </div>
 
       <DashboardCards />
+      <DashboardCharts />
 
     </div>
   );
