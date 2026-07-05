@@ -181,6 +181,81 @@ Dashboard • Alerts • Reports
 
 ---
 
+# Installation
+
+## Clone the repository
+
+```bash
+git clone https://github.com/Azeezee0925/ThreatLens.git
+cd ThreatLens
+```
+
+## Backend Setup
+
+```bash
+cd backend
+python -m venv .venv
+```
+
+### Windows
+
+```bash
+.venv\Scripts\activate
+```
+
+### Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### Create environment file
+
+Create a `.env` file and add your API keys:
+
+```env
+VIRUSTOTAL_API_KEY=YOUR_API_KEY
+ABUSEIPDB_API_KEY=YOUR_API_KEY
+ALIENVAULT_API_KEY=YOUR_API_KEY
+```
+
+### Start the backend
+
+```bash
+uvicorn app.main:app --reload
+```
+
+The backend will be available at:
+
+```
+http://127.0.0.1:8000
+```
+
+Swagger documentation:
+
+```
+http://127.0.0.1:8000/docs
+```
+
+---
+
+## Frontend Setup
+
+Open a new terminal.
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The frontend will be available at:
+
+```
+http://localhost:3000
+```
+
+
 ## Key Capabilities
 
 * IOC Enrichment
