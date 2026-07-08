@@ -201,6 +201,14 @@ Dashboard • Alerts • Reports
 
 ---
 
+## Example Investigations
+
+![Safe Sample](domain_investigate.png)
+
+![Malicious Sample](hash_investigate.png)
+
+---
+
 ## History
 
 ![History](docs/History.png)
