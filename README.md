@@ -225,6 +225,12 @@ Dashboard • Alerts • Reports
 
 ![Swagger](docs/Swagger.png)
 
+# Demo Video
+
+Watch the complete ThreatLens AI demonstration here:
+
+(https://drive.google.com/file/d/1AFmcUFg2IB3pL-iON8RXiVygGOoZljQP/view?usp=sharing)
+
 # Installation
 
 ## Clone the repository
