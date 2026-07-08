@@ -48,16 +48,42 @@ export default function CVECard({ result }: Props) {
 
             <div className="space-y-3">
 
-              {result.related_cves?.map((cve: string) => (
+              {result.related_cves?.map((cve: any) => (
 
-                <div
-                  key={cve}
-                  className="bg-slate-800 rounded-lg p-4"
-                >
-                  {cve}
-                </div>
+  <div
+    key={cve.id}
+    className="bg-slate-800 rounded-lg p-4 space-y-2"
+  >
+    <h3 className="text-red-400 font-bold">
+      {cve.id}
+    </h3>
 
-              ))}
+    <p>
+      <span className="text-slate-400">Severity:</span>{" "}
+      {cve.severity}
+    </p>
+
+    <p>
+      <span className="text-slate-400">CVSS:</span>{" "}
+      {cve.cvss}
+    </p>
+
+    <p className="text-slate-300">
+      {cve.description}
+    </p>
+
+    <a
+      href={cve.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-blue-400 underline"
+    >
+      View CVE Details
+    </a>
+
+  </div>
+
+))}
 
             </div>
 
