@@ -181,6 +181,42 @@ Dashboard • Alerts • Reports
 
 ---
 
+# Screenshots
+
+## Landing Page
+
+![Landing Page](docs/Landing_page.png)
+
+---
+
+## Dashboard
+
+![Dashboard](docs/Dashboard.png)
+
+---
+
+## IOC Investigation
+
+![Investigation](docs/Investigation.png)
+
+---
+
+## History
+
+![History](docs/History.png)
+
+---
+
+## Alerts
+
+![Alerts](docs/Alerts.png)
+
+---
+
+## Swagger API
+
+![Swagger](docs/Swagger.png)
+
 # Installation
 
 ## Clone the repository
