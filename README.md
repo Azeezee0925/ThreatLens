@@ -217,6 +217,7 @@ Create a `.env` file and add your API keys:
 VIRUSTOTAL_API_KEY=YOUR_API_KEY
 ABUSEIPDB_API_KEY=YOUR_API_KEY
 ALIENVAULT_API_KEY=YOUR_API_KEY
+NVD_API_KEY=YOUR_API_KEY
 ```
 
 ### Start the backend
